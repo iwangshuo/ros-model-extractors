@@ -52,7 +52,6 @@ class RosExtractor():
         parser.set_database(db_dir)
     else:
       print("The compile_commands.json file can't be found")
-
     if (self.args.node):
         print("hi sarah")
         self.extract_node(self.args.name, self.args.name, self.args.package_name, None, ws, None)
@@ -396,7 +395,7 @@ class RosExtractor():
   def parse_arg(self):
       parser = argparse.ArgumentParser()
       mutually_exclusive = parser.add_mutually_exclusive_group()
-      mutually_exclusive.add_argument('--node', '-n', help="node analyse", action='store_true')
+      mutually_exclusive.add_argument('--node', '-n', help="node analyse", action='store_true', default=True)
       mutually_exclusive.add_argument('--launch', '-l', help="launch analyse", action='store_true')
       parser.add_argument('--model-path', help='path to the folder in which the model files should be saved',
                           default='./',
@@ -408,7 +407,7 @@ class RosExtractor():
       parser.add_argument('--path-to-src', required=False, dest='path_to_src')
       parser.add_argument('--repo', required=False, dest='repo')
       parser.add_argument('-a', action='store_true')
-      parser.add_argument('--clang-version', required=True, dest='clang_version')
+      parser.add_argument('--clang-version', required=False, dest='clang_version', default='3.8')
       self.args = parser.parse_args()
 
 
@@ -449,3 +448,11 @@ def main(argv = None):
 
 if __name__== "__main__":
   main()
+
+# haros_runner_nomake.sh cob_sick_s300 cob_sick_s300 node . /home/extractor/ws cob_driver
+
+# $clang_version, "$1",     "$2",           "${3}", "${4}",     "${5}",         "$path_to_src_code" ,   $model_repo,    ${4}
+#  10,      cob_sick_s300, cob_sick_s300,   node,       .,    /home/extractor/ws,           ,       cob_driver,       .
+
+# python3 /home/extractor/ros-model-extractors/ros_model_extractor.py --clang-version $clang_version --package "$1" --name "$2" --"${3}" --model-path "${4}" --ws "${5}" --path-to-src "$path_to_src_code" --repo $model_repo>> ${4}/extractor.log
+# python3 ros_model_extractor_wshuo.py --package cob_sick_s300 --name cob_sick_s300 --ws /home/wshuo/Documents/extractor --repo cob_driver>> ./extractor.log
